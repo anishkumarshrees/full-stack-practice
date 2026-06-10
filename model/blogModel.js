@@ -7,15 +7,16 @@ const Schema = mongoose.Schema //schema is a class that is used to define the st
 const blogSchema=new Schema({
     //eauta matra xa vani esari garna milxa
     //title:string
+    
     title:{
-        type:String||Number ,
+        type:String ,
         unique:true 
     },
     subtitle:{
         type:String||Number
     },
     description:{
-        type:Text
+        type:String
     },
     image:{
         type:String
@@ -24,6 +25,7 @@ const blogSchema=new Schema({
 
 
 const Blog=mongoose.model('Blog',blogSchema)
+//so whenever we need to create or delete or update or read data from frontend we have go through this model as of this Blog is the model that we have created .
 //manoose.model('Blog (this is name of table ,blogschema(this is structure of table from up))')
 
  module.exports= Blog

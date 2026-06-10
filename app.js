@@ -2,9 +2,10 @@ require('dotenv').config()
 //require is used to import modules in node.js
 const express = require('express') //express is a web application framework for Node.js, designed for building web applications and APIs. It provides a robust set of features for web and mobile applications, making it easier to manage routes, handle requests and responses, and integrate with various middleware.
 const connectToDatabase = require('./database/db')
+const Blog = require('./model/blogModel')
 connectToDatabase()
 const app = express()
-app.use(express.json()) //yo chai sadhai hannu parxa json ko file lai read garna lai express.json() le help garxa
+app.use(express.json()) //yo chai sadhai hannu parxa json ko file lai read garna lai express.json() le help garxa. edi yo na haney undefined aaunxa
 
 
 //app.get is used to get data from the server and send to client.it takes two paramerters, first is the route '/' which is the root route means where route means the path of url example localhost:3000 is using root route and second is a callback function that will be executed when a get request is made to specified route.
@@ -30,8 +31,20 @@ app.get("/home",(req,res)=>{
 
 
 
-app.post("/home",(req,res)=>{
+app.post("/home",async(req,res)=>{
+    // const title= req.body.title
+    // const subtitle=req.body.subtitle
+    // const description=req.body.description
+    // console.log(req.body)
     console.log(req.body)
+ const {title,subtitle,description,image}=req.body
+   await Blog.create({
+   
+        title:title,
+        subtitle:subtitle,
+        description:description,
+        image:image
+    })
     res.json({
         'message':'data added successfully'
     })
