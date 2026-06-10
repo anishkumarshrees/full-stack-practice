@@ -28,7 +28,7 @@ app.get("/home",(req,res)=>{
 })
 
 
-
+//app.post
 
 
 app.post("/home",async(req,res)=>{
@@ -38,6 +38,11 @@ app.post("/home",async(req,res)=>{
     // console.log(req.body)
     console.log(req.body)
  const {title,subtitle,description,image}=req.body
+ if(!title && !description &&!subtitle &&!image ){
+    return res.status(400).json({
+        message:"please provide atleat title or write description"
+    })
+ }
    await Blog.create({
    
         title:title,
