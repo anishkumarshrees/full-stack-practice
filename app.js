@@ -4,6 +4,7 @@ const express = require('express') //express is a web application framework for 
 const connectToDatabase = require('./database/db')
 connectToDatabase()
 const app = express()
+app.use(express.json()) //yo chai sadhai hannu parxa json ko file lai read garna lai express.json() le help garxa
 
 
 //app.get is used to get data from the server and send to client.it takes two paramerters, first is the route '/' which is the root route means where route means the path of url example localhost:3000 is using root route and second is a callback function that will be executed when a get request is made to specified route.
@@ -19,6 +20,7 @@ app.get("/",(req,res)=>{
     })
 })
 app.get("/home",(req,res)=>{
+    
     res.json({
         'message':'welcome to home page'
     })
@@ -26,11 +28,18 @@ app.get("/home",(req,res)=>{
 
 
 
+
+
+app.post("/home",(req,res)=>{
+    console.log(req.body)
+    res.json({
+        'message':'data added successfully'
+    })
+})
 app.listen(process.env.PORT,()=>//(3000 is port number and ()=> is a callback function that will be executed once the server starts listening on the specified port.)
     {
-    console.log('server is running on port 3000')
+    console.log('server is running on 3000')
 })
-// mongodb+srv://anishshrees12_db_user:<admin123>@cluster0.l5jcm5a.mongodb.net/?appName=Cluster0
 
 
 
