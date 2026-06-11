@@ -36,14 +36,23 @@ app.get("/home",(req,res)=>{
 
 
 // app.post("/home",async(req,res)=>{
-    app.post("/home",upload.single("image"),async(req,res)=>{
+    app.post("/blog",upload.single("image"),async(req,res)=>{
     // const title= req.body.title
     // const subtitle=req.body.subtitle
     // const description=req.body.description
     // console.log(req.body)
     console.log(req.body)
+    // if(
+    //     req.file>=100000{
+    //     return res.status(400).json({
+    //         message:"file size should be less than 100kb"
+    //     }
+    //     else{}
+    // )
+    // console.log(req.file) //yo chai file ko details haru console ma dekhaune vanne ho
  const {title,subtitle,description,image}=req.body
- if(!title && !description &&!subtitle  ){
+ const filename=req.file.filename
+ if(!title && !description && !subtitle && !image ){
     return res.status(400).json({
         message:"please provide atleat title or write description"
     })
@@ -53,12 +62,21 @@ app.get("/home",(req,res)=>{
         title:title,
         subtitle:subtitle,
         description:description,
-        image: image
+        image: filename
     })
     res.json({
         'message':'data added successfully'
     })
 })
+app.get("/blog",async (req,res)=>{
+
+const blogs = await Blog.find()
+res.status(200).json({
+    message:"all blogs",
+    data:blogs
+})
+})
+
 app.listen(process.env.PORT,()=>//(3000 is port number and ()=> is a callback function that will be executed once the server starts listening on the specified port.)
     {
     console.log('server is running on 3000')
