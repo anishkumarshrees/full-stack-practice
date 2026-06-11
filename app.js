@@ -4,6 +4,7 @@ const express = require('express') //express is a web application framework for 
 const connectToDatabase = require('./database/db')
 const Blog = require('./model/blogModel')
 const { storage, multer } = require('./middleware/multerConfig')
+
 connectToDatabase()
 const app = express()
 app.use(express.json()) //yo chai sadhai hannu parxa json ko file lai read garna lai express.json() le help garxa. edi yo na haney undefined aaunxa
@@ -76,6 +77,41 @@ res.status(200).json({
     data:blogs
 })
 })
+
+app.get("/blog/:id",async (req,res)=>{
+const id = req.params.id
+const blog =await Blog.findById(id)
+if(!blog){
+    res.status(404).json({
+        message:"id not foud"
+    })
+
+}
+else {
+  return  res.status(200).json({
+        message:"blog found",
+        data:blog
+    })
+}
+
+})
+
+app.delete("/blog/:id",async (req,res)=>{
+    const id = req.params.id
+    const blog = await Blog.findByIdAndDelete(id)
+    if(!blog){
+        res.status(404).json({
+            message:"id not found"
+        })
+    }
+    else{
+       return res.status(200).json({
+            message:"blog deleted successfully"
+            
+        })
+    }
+})
+app.use(express.static('./storage'))
 
 app.listen(process.env.PORT,()=>//(3000 is port number and ()=> is a callback function that will be executed once the server starts listening on the specified port.)
     {
