@@ -15,9 +15,19 @@ app.use(cors({
     origin:"http://localhost:5173"
     //  origin:["http://localhost:5173/","digitalpathshala.com","facebook.com"] edi dherai website lai request accept dina paryo vani
 }))
+app.use('/storage', express.static('storage'))
 
-const upload= multer({storage : storage})
+const upload= multer({storage})
 const fs=require('fs')
+
+const addImageUrl = (req, blog) => {
+    const blogData = blog.toObject ? blog.toObject() : blog
+
+    return {
+        ...blogData,
+        imageUrl: blogData.image ? `${req.protocol}://${req.get('host')}/storage/${blogData.image}` : null
+    }
+}
 
 //app.get is used to get data from the server and send to client.it takes two paramerters, first is the route '/' which is the root route means where route means the path of url example localhost:3000 is using root route and second is a callback function that will be executed when a get request is made to specified route.
 app.get("/",(req,res)=>{
@@ -58,14 +68,14 @@ app.get("/home",(req,res)=>{
     //     else{}
     // )
     // console.log(req.file) //yo chai file ko details haru console ma dekhaune vanne ho
- const {title,subtitle,description,image}=req.body
- const filename=req.file.filename
- if(!title && !description && !subtitle && !image ){
+ const {title,subtitle,description}=req.body
+ const filename = req.file ? req.file.filename : null
+ if(!title && !description && !subtitle && !filename ){
     return res.status(400).json({
         message:"please provide atleat title or write description"
     })
  }
-   await Blog.create({
+   const blog = await Blog.create({
    
         title:title,
         subtitle:subtitle,
@@ -73,7 +83,8 @@ app.get("/home",(req,res)=>{
         image: filename
     })
     res.json({
-        'message':'data added successfully'
+        'message':'data added successfully',
+        data:addImageUrl(req, blog)
     })
 })
 app.get("/blog",async (req,res)=>{
@@ -81,7 +92,7 @@ app.get("/blog",async (req,res)=>{
 const blogs = await Blog.find()
 res.status(200).json({
     message:"all blogs",
-    data:blogs
+    data:blogs.map((blog)=>addImageUrl(req, blog))
 })
 })
 
@@ -97,7 +108,7 @@ if(!blog){
 else {
   return  res.status(200).json({
         message:"blog found",
-        data:blog
+        data:addImageUrl(req, blog)
     })
 }
 
@@ -150,8 +161,6 @@ app.patch("/blog/:id",upload.single("image") , async (req,res)=>{
 }
 })
 
-
-app.use(express.static('./storage'))
 
 app.listen(process.env.PORT,()=>//(3000 is port number and ()=> is a callback function that will be executed once the server starts listening on the specified port.)
     {

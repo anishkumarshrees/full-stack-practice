@@ -8,7 +8,6 @@ const storage = multer.diskStorage({
     }//filename vaneko chai file ko name tetikai rakni ki change garni vanne ho so esko kam modify garni ki tetikai rakhni vanni ho
     //esko main kaam chai jastai file ko name eautai 2 ota user le upload garyo vani details haru modify garera rakhxa
 })
-
 module.exports={
     multer,
     storage
