@@ -13,7 +13,7 @@ const blogSchema=new Schema({
         unique:true 
     },
     subtitle:{
-        type:String||Number
+        type:String
     },
     description:{
         type:String

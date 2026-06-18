@@ -17,15 +17,25 @@ app.use(cors({
 }))
 app.use('/storage', express.static('storage'))
 
-const upload= multer({storage})
+const upload= multer({storage:storage})
 const fs=require('fs')
 
-const addImageUrl = (req, blog) => {
+const image = (req, blog) => {
     const blogData = blog.toObject ? blog.toObject() : blog
+    const imageName = blogData.image
+
+    if (imageName && imageName.startsWith('http')) {
+        return {
+            ...blogData,
+            imageUrl: imageName
+        }
+    }
 
     return {
         ...blogData,
-        imageUrl: blogData.image ? `${req.protocol}://${req.get('host')}/storage/${blogData.image}` : null
+        imageUrl: imageName
+  ? `${req.protocol}://${req.get('host')}/storage/${imageName}`
+  : ""
     }
 }
 
@@ -69,8 +79,8 @@ app.get("/home",(req,res)=>{
     // )
     // console.log(req.file) //yo chai file ko details haru console ma dekhaune vanne ho
  const {title,subtitle,description}=req.body
- const filename = req.file ? req.file.filename : null
- if(!title && !description && !subtitle && !filename ){
+ const filename = req.file.filename
+ if(!title && !description && !subtitle || !image ){
     return res.status(400).json({
         message:"please provide atleat title or write description"
     })
@@ -84,7 +94,7 @@ app.get("/home",(req,res)=>{
     })
     res.json({
         'message':'data added successfully',
-        data:addImageUrl(req, blog)
+        data:image(req, blog)
     })
 })
 app.get("/blog",async (req,res)=>{
@@ -92,7 +102,7 @@ app.get("/blog",async (req,res)=>{
 const blogs = await Blog.find()
 res.status(200).json({
     message:"all blogs",
-    data:blogs.map((blog)=>addImageUrl(req, blog))
+    data:blogs.map((blog)=>image(req, blog))
 })
 })
 
@@ -108,7 +118,7 @@ if(!blog){
 else {
   return  res.status(200).json({
         message:"blog found",
-        data:addImageUrl(req, blog)
+        data:image(req, blog)
     })
 }
 
