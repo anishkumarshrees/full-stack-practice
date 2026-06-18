@@ -79,7 +79,13 @@ app.get("/home",(req,res)=>{
     // )
     // console.log(req.file) //yo chai file ko details haru console ma dekhaune vanne ho
  const {title,subtitle,description}=req.body
- const filename = req.file.filename
+//  const filename = req.file.filename
+let filename;
+ if (req.file){
+    filename = "http://localhost:3000/"+ req.file.filename
+ }else{
+    filename=""
+ }
  if(!title && !description && !subtitle || !image ){
     return res.status(400).json({
         message:"please provide atleat title or write description"
