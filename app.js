@@ -154,6 +154,12 @@ app.patch("/blog/:id",upload.single("image") , async (req,res)=>{
     const blog =await Blog.findById(id)
     const oldimageName=blog.image
 
+if(req.file){
+    imageName=req.file.filename
+}
+
+if(blog.image){
+
     fs.unlink(`storage/${oldimageName}`,(err)=>{
         if(err){
             console.log(err)
@@ -162,6 +168,7 @@ app.patch("/blog/:id",upload.single("image") , async (req,res)=>{
             console.log("file deleted successfully")
         }
     })
+}
     await  Blog.findByIdAndUpdate(id,{
         title:title,
         subtitle:subtitle,
