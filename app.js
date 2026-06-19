@@ -12,7 +12,7 @@ storage
 multer 
 const cors=require('cors')
 app.use(cors({
-    origin:"http://localhost:5173"
+    origin:["http://localhost:5173","https://blog-project-nine-sigma.vercel.app"]
     //  origin:["http://localhost:5173/","digitalpathshala.com","facebook.com"] edi dherai website lai request accept dina paryo vani
 }))
 app.use('/storage', express.static('storage'))
