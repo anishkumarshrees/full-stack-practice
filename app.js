@@ -82,7 +82,7 @@ app.get("/home",(req,res)=>{
 //  const filename = req.file.filename
 let filename;
  if (req.file){
-    filename = "http://localhost:3000/"+ req.file.filename
+    filename = "https://blog-project-nine-sigma.vercel.app/"+ req.file.filename
  }else{
     filename=""
  }
